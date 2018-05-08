@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swagger-ui
+  labels:
+    app: swagger-ui
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: swagger-ui
+  template:
+    metadata:
+      labels:
+        app: swagger-ui
+    spec:
+      containers:
+      - name: swagger-ui
+        image: swaggerapi/swagger-ui:v3.14.1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: BASE_URL
+          value: /swagger-ui
+        - name: API_URLS
+          value: >-
+            [
+            {url:'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml',name:'Pet Store Example'},
+            {url:'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/uspto.yaml',name:'USPTO'},
+            {url:'/swagger-ui/file-example/local.example.yml',name:'Local Example'}
+            ]
+        volumeMounts:
+        - name: local-example
+          mountPath: /usr/share/nginx/html/file-example
+      volumes:
+        - name: local-example
+          configMap:
+            name: local-example
+            items:
+              - key: swagger
+                path: local.example.yml

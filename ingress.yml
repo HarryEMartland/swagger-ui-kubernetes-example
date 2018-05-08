@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: swagger-ui
+spec:
+    backend:
+      serviceName: default-http-backend
+      servicePort: 80
+    rules:
+    - http:
+        paths:
+        - path: /swagger-ui
+          backend:
+            serviceName: swagger-ui
+            servicePort: 80
